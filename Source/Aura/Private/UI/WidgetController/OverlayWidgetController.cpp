@@ -13,3 +13,21 @@ void UOverlayWidgetController::BroadcastInitialValues()
 	OnHealthChangedSignature.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChangedSignature.Broadcast(AuraAttributeSet->GetMaxHealth());
 }
+
+void UOverlayWidgetController::BindCallbacksToDependencies()
+{
+	const UAuraAttributeSet* AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute()).AddUObject(this, &UOverlayWidgetController::HealthChange);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute()).AddUObject(this, &UOverlayWidgetController::MaxHealthChange);
+}
+
+void UOverlayWidgetController::HealthChange(const FOnAttributeChangeData& Data) const
+{
+	OnHealthChangedSignature.Broadcast(Data.NewValue);
+}
+
+void UOverlayWidgetController::MaxHealthChange(const FOnAttributeChangeData& Data) const
+{
+	OnMaxHealthChangedSignature.Broadcast(Data.NewValue);
+}
