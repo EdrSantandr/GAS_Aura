@@ -8,7 +8,9 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-
+// IMPORTANT STEPS (1) setup delegates
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
 /**
  * 
  */
@@ -28,8 +30,20 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnMaxHealthChangedSignature OnMaxHealthChangedSignature;
 
+	// IMPORTANT STEPS (2) create delegate anme to assign
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnManaChangedSignature OnManaChangedSignature;
+
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FOnMaxManaChangedSignature OnMaxManaChangedSignature;
+
 protected:
 	void HealthChange(const FOnAttributeChangeData& Data) const;
 
 	void MaxHealthChange(const FOnAttributeChangeData& Data) const;
+
+	// IMPORTANT STEPS (3) create function to bind delegate
+	void ManaChange(const FOnAttributeChangeData& Data) const;
+
+	void MaxManaChange(const FOnAttributeChangeData& Data) const;
 };
