@@ -73,6 +73,9 @@ protected:
 
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffects")
+	float ActorLevel = 1.f;
+
 	/*Array of Each Duration Type*/
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffectsArray")
 	TArray<TSubclassOf<UGameplayEffect>> InstantGameplayEffectClassArray;
