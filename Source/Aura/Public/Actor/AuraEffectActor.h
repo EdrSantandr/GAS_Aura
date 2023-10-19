@@ -72,4 +72,18 @@ protected:
 	EEffectRemovalPolicy InfiniteEffectRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
 
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
+
+	/*Array of Each Duration Type*/
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffectsArray")
+	TArray<TSubclassOf<UGameplayEffect>> InstantGameplayEffectClassArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffectsArray")
+	TArray<TSubclassOf<UGameplayEffect>> DurationGameplayEffectClassArray;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "AppliedEffectsArray")
+	TArray<TSubclassOf<UGameplayEffect>> InfiniteGameplayEffectClassArray;
+
+	UFUNCTION(BlueprintCallable)
+	void OnOverlapMultiInfinite(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);
+	
 };

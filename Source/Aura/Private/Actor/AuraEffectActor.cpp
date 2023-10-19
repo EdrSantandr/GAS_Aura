@@ -97,3 +97,11 @@ void AAuraEffectActor::OnEndOverlap(AActor* TargetActor)
 	}
 }
 
+void AAuraEffectActor::OnOverlapMultiInfinite(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass)
+{
+	if (InfiniteEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
+	{
+		ApplyEffectToTarget(TargetActor, GameplayEffectClass);
+	}
+}
+
