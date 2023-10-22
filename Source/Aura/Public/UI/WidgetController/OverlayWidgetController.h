@@ -28,16 +28,12 @@ struct FUIWidgetRow :public  FTableRowBase
 
 
 class UAuraUserWidget;
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature, float, NewMaxHealth);
-// IMPORTANT STEPS (1) setup delegates
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature, float, NewMaxMana);
+
+// IMPORTANT STEPS (1) setup delegates (Only if the attribute is the same type for each delegate)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
 
 //Another delegate to broadcast the row
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, FUIWidgetRow, Row);
-
-
 
 /**
  * 
@@ -53,17 +49,17 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
-	FOnHealthChangedSignature OnHealthChangedSignature;
+	FOnAttributeChangedSignature OnHealthChangedSignature;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
-	FOnMaxHealthChangedSignature OnMaxHealthChangedSignature;
+	FOnAttributeChangedSignature OnMaxHealthChangedSignature;
 
-	// IMPORTANT STEPS (2) create delegate anme to assign
+	// IMPORTANT STEPS (2) create delegate name to assign
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
-	FOnManaChangedSignature OnManaChangedSignature;
+	FOnAttributeChangedSignature OnManaChangedSignature;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
-	FOnMaxManaChangedSignature OnMaxManaChangedSignature;
+	FOnAttributeChangedSignature OnMaxManaChangedSignature;
 
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowSignature;
@@ -72,15 +68,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
-	
-	void HealthChange(const FOnAttributeChangeData& Data) const;
-
-	void MaxHealthChange(const FOnAttributeChangeData& Data) const;
-
-	// IMPORTANT STEPS (3) create function to bind delegate
-	void ManaChange(const FOnAttributeChangeData& Data) const;
-
-	void MaxManaChange(const FOnAttributeChangeData& Data) const;
 
 	// Template function
 	template<typename T>
