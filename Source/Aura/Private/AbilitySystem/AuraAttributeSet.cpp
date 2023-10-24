@@ -21,7 +21,14 @@ void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Ou
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	//Primary Sttributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Strength,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Intelligence,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Resilience,COND_None,REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Vigor,COND_None,REPNOTIFY_Always);
+	
 	// Registering health to replicate. Wihtout any condition.
+	//Vital Sttributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Health,COND_None,REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,MaxHealth,COND_None,REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UAuraAttributeSet,Mana,COND_None,REPNOTIFY_Always);
@@ -123,5 +130,25 @@ void UAuraAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
 {
 	//Inform the ablility system that we are replicating MaxMana
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet,MaxMana,OldMaxMana);
+}
+
+void UAuraAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldStrength)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet,Strength,OldStrength);
+}
+
+void UAuraAttributeSet::OnRep_Intelligence(const FGameplayAttributeData& OldIntelligence)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet,Intelligence,OldIntelligence);
+}
+
+void UAuraAttributeSet::OnRep_Resilience(const FGameplayAttributeData& OldResilience)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet,Resilience,OldResilience);
+}
+
+void UAuraAttributeSet::OnRep_Vigor(const FGameplayAttributeData& OldVigor)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UAuraAttributeSet,Vigor,OldVigor);
 }
 
