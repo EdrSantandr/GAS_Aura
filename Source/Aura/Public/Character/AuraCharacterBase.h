@@ -31,7 +31,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
+   
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
@@ -40,5 +40,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere,Category="Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
-	void InitializePrimaryAttributes() const;
+	UPROPERTY(BlueprintReadOnly, EditAnywhere,Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> DefaultAttributes, float Level) const;
+
+	void InitilizeDefaultAtributes() const;
 };

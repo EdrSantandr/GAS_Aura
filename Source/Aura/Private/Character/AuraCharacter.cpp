@@ -47,7 +47,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	}
 
 	//Here it's safe to call the initialize Attributes
-	InitializePrimaryAttributes();
+	InitilizeDefaultAtributes();
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
