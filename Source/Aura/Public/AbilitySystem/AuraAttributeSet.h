@@ -47,6 +47,12 @@ struct FEffectProperties
 	ACharacter* TargetCharacter = nullptr;
 
 };
+
+//typedef is specific to FgameplayAttribute signature, but TStaticFunPtr is generic to any signature chosen
+//typedef TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr FAttributeFuncPtr;
+template< class T>
+using TStaticFuncPointer =  typename TBaseStaticDelegateInstance<T,FDefaultDelegateUserPolicy>::FFuncPtr;
+
 /**
  * 
  */
@@ -66,6 +72,13 @@ public:
 
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	//In this structure we'll handle different delegates associate to each gameplaytag
+	TMap<FGameplayTag, TStaticFuncPointer<FGameplayAttribute()>> TagsToAttributes;
+	//TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
+
+	//We create this function to replace the delagates we need to associate with each attribute
+	//TBaseStaticDelegateInstance<FGameplayAttribute(),FDefaultDelegateUserPolicy>::FFuncPtr FunctionPointer;
+	
 	/* Primary Attributes*/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category="Primary Attributes")
 	FGameplayAttributeData Strength;
