@@ -9,21 +9,32 @@
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
-	
+	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
+	check(AttributeInfo);
+	for(auto &Pair: AS->TagsToAttributes)
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Pair.Value()).AddLambda(
+			[this, Pair](const FOnAttributeChangeData& Data)
+			{
+				BroadcastAttributeInfo(Pair.Key,Pair.Value());
+			}
+		);
+	}
 }
 
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
-
 	check(AttributeInfo);
-	
 	for(auto& Pair:AS->TagsToAttributes)
 	{
-		FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Pair.Key);
-		// This line executes the delegate in the TMAP, () => this replace the execution because we are using function pointers
-		FGameplayAttribute Attribute = Pair.Value();
-		Info.AttributeValue = Attribute.GetNumericValue(AS);
-		AttributeInfoSignature.Broadcast(Info);
+		BroadcastAttributeInfo(Pair.Key,Pair.Value());
 	}
+}
+
+void UAttributeMenuWidgetController::BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const
+{
+	FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(AttributeTag);
+	Info.AttributeValue = Attribute.GetNumericValue(AttributeSet);
+	AttributeInfoSignature.Broadcast(Info);
 }
