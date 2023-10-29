@@ -47,7 +47,7 @@ void AAuraCharacter::InitAbilityActorInfo()
 	}
 
 	//Here it's safe to call the initialize Attributes
-	InitilizeDefaultAtributes();
+	InitializeDefaultAttributes();
 }
 
 void AAuraCharacter::PossessedBy(AController* NewController)
@@ -55,6 +55,9 @@ void AAuraCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	//Init ability actor info for the server
 	InitAbilityActorInfo();
+
+	//Grant startup abilities
+	AddCharacterAbilities();
 }
 
 void AAuraCharacter::OnRep_PlayerState()
