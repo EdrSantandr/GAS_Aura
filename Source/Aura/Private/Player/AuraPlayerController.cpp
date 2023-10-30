@@ -16,16 +16,13 @@
 AAuraPlayerController::AAuraPlayerController()
 {
 	bReplicates = true;
-
 	Spline = CreateDefaultSubobject<USplineComponent>("Spline");
 }
 
 void AAuraPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-
 	CursorTrace();
-
 	AutoRun();
 }
 
@@ -93,55 +90,16 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::CursorTrace()
 {
-	FHitResult CursorHit;
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	if (!CursorHit.bBlockingHit) return;
 
 	LastActor = ThisActor;
 	ThisActor = Cast<IEnemyInterface>(CursorHit.GetActor());
 
-	// a) Lastactor == null and ThisActor==null -> Do nothing
-
-	// b) Lastactor == null and ThisActor is valid -> Do Highligth ThisActor
-
-	// c) Lastactor is valid and ThisActor == null -> Do Unhighligth LastActor
-	
-	// d) Lastactor is valid and ThisActor is valid, but LastActor != ThisActor -> Do Unhighligth LastActor, and Hightlight ThisActor
-
-	// e) Lastactor is valid and ThisActor is valid, but LastActor == ThisActor -> Do nothing
-
-	if (LastActor == nullptr)
+	if(LastActor != ThisActor)
 	{
-		if (ThisActor != nullptr)
-		{
-			//Case b)
-			ThisActor->HighlightActor();
-		}
-		else
-		{
-			//Case a)
-		}
-	}
-	else // LastActor is valid
-	{
-		if (ThisActor == nullptr)
-		{
-			//Case c)
-			LastActor->UnHighlightActor();
-		}
-		else // BothActors are valid
-		{
-			if (LastActor != ThisActor)
-			{
-				//Case d)
-				LastActor->UnHighlightActor();
-				ThisActor->HighlightActor();
-			}
-			else
-			{
-				//Case e)
-			}
-		}
+		if (LastActor) LastActor->UnHighlightActor();
+		if (ThisActor) ThisActor->HighlightActor();
 	}
 }
 
@@ -158,23 +116,17 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if(!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if(GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);			
-		}
+		if(GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 		return;
 	}
 
 	if (bTargeting)
 	{
-		if(GetASC())
-		{
-			GetASC()->AbilityInputTagReleased(InputTag);			
-		}
+		if(GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 	}
 	else
 	{
-		APawn* ControlledPawn = GetPawn();
+		const APawn* ControlledPawn = GetPawn();
 		if(FollowTime <= ShortPressThreshold && ControlledPawn)
 		{
 			if (UNavigationPath* NavPath = UNavigationSystemV1::FindPathToLocationSynchronously(this, ControlledPawn->GetActorLocation(), CachedDestination))
@@ -183,7 +135,6 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				for(const FVector& PointLocation : NavPath->PathPoints)
 				{
 					Spline->AddSplinePoint(PointLocation,ESplineCoordinateSpace::World);
-					DrawDebugSphere(GetWorld(), PointLocation, 8.f, 8, FColor::Green, false,5.f);
 				}
 				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
 				bAutoRunning = true;
@@ -201,29 +152,20 @@ void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
 	if(!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
-		if(GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);			
-		}
+		if(GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 		return;
 	}
 	if (bTargeting)
 	{
-		if(GetASC())
-		{
-			GetASC()->AbilityInputTagHeld(InputTag);			
-		}
+		if(GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 	}
 	else
 	{
 		//Click to move behavior
 		FollowTime += GetWorld()->GetDeltaSeconds();
-		FHitResult Hit;
-		if (GetHitResultUnderCursor(ECC_Visibility,false,Hit))
-		{
-			CachedDestination = Hit.ImpactPoint;
-		}
-
+		
+		if (CursorHit.bBlockingHit) CachedDestination = CursorHit.ImpactPoint;
+		
 		if (APawn* ControlledPawn =  GetPawn())
 		{
 			const FVector WorldDirection = (CachedDestination - ControlledPawn->GetActorLocation()).GetSafeNormal();
