@@ -136,7 +136,15 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				{
 					Spline->AddSplinePoint(PointLocation,ESplineCoordinateSpace::World);
 				}
-				CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+				if (NavPath->PathPoints.Num() > 1)
+				{
+					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num() - 1];
+				}
+				else
+				{
+					CachedDestination = NavPath->PathPoints[NavPath->PathPoints.Num()];
+				}
+				
 				bAutoRunning = true;
 			}
 		}
