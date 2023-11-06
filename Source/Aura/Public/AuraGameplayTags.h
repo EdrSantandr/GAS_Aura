@@ -49,6 +49,9 @@ public:
 
 	//For MetaAttributes
 	FGameplayTag Damage;
+
+	//For Gameplay Effects
+	FGameplayTag Effects_HitReact;
 	
 private:
     static FAuraGameplayTags GameplayTags;

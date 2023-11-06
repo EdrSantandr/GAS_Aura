@@ -116,6 +116,13 @@ void UAuraAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallba
 
 			//Damage fatal
 			const bool bFatal =  NewHealth <= 0.f;
+			// Activate HitReactAbility
+			if(!bFatal)
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			}
 			
 		}
 	}
