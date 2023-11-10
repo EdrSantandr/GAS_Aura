@@ -50,19 +50,28 @@ void AAuraProjectile::Destroyed()
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound,GetActorLocation(),FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect,GetActorLocation());
-		LoopingSoundComponent->Stop();
+		if (LoopingSoundComponent)	LoopingSoundComponent->Stop();
 	}
 	Super::Destroyed();
 }
 
 void AAuraProjectile::OnSphereOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Play sound
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound,GetActorLocation(),FRotator::ZeroRotator);
+	if(DamageEffectSpecHandle.Data.IsValid() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	{
+		return;
+	}
+	// fix for multiple sounds spawn on the client
+	if (!bHit)
+	{
+		//Play sound
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound,GetActorLocation(),FRotator::ZeroRotator);
 
-	// Spawn niagara
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect,GetActorLocation());
-	LoopingSoundComponent->Stop();
+		// Spawn niagara
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect,GetActorLocation());
+		if (LoopingSoundComponent) LoopingSoundComponent->Stop();	
+	}
+	
 	//Check if its on the server
 	if (HasAuthority())
 	{

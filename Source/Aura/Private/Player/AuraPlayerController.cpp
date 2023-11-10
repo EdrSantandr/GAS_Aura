@@ -31,7 +31,8 @@ void AAuraPlayerController::PlayerTick(float DeltaTime)
 void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter, bool bBlockedHit, bool bCriticalHit)
 {
 	//Construct a Widgetcomponent class
-	if (IsValid(TargetCharacter) && DamageTextControllerClass)
+	//Added localcontroller check to verify
+	if (IsValid(TargetCharacter) && DamageTextControllerClass && IsLocalController())
 	{
 		UDamageTextComponent* DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextControllerClass);
 		//Important when it's created dynamically
