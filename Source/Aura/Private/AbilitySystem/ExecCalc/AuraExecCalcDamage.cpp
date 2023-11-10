@@ -70,8 +70,14 @@ void UAuraExecCalcDamage::Execute_Implementation(const FGameplayEffectCustomExec
 	EvaluateParameters.TargetTags = TargetTags;
 
 	// GetDamage set by caller magnitude
-	float Damage = Spec.GetSetByCallerMagnitude(FAuraGameplayTags::Get().Damage);
-
+	float Damage = 0.f;
+	for (FGameplayTag DamageTypeTag : FAuraGameplayTags::Get().DamageTypes)
+	{
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		// Because if get set by caller don't find the damage, it will return 0 
+		Damage += DamageTypeValue;
+	}
+	
 	//Capture Blockchance on target
 	float TargetBlockChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluateParameters, TargetBlockChance);
