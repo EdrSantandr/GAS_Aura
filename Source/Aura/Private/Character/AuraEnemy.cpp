@@ -43,6 +43,10 @@ void AAuraEnemy::PossessedBy(AController* NewController)
 
 	AuraAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	AuraAIController->RunBehaviorTree(BehaviorTree);
+	//Setup the HitReact
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+	// Setup if it's a ranger or melee
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),CharacterClass != ECharacterClass::Warrior);
 }
 
 void AAuraEnemy::HighlightActor()
@@ -126,6 +130,8 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 {
 	bHitReacting = NewCount > 0;//BaseWalkSpeed
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	//As this is related to the movement component we should update here
+	AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),bHitReacting);
 }
 
 
