@@ -93,7 +93,7 @@ void AAuraEnemy::BeginPlay()
 	//This can be perform only on the server
 	if (HasAuthority())
 	{
-		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);		
+		UAuraAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);		
 	}
 	
 	//Set the widget controller
