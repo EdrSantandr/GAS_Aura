@@ -99,8 +99,14 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties Props, float Da
 {
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
-		// We need to retrieve the correct player controller for multiplayer not just the index=0 
+		// We need to retrieve the correct player controller for multiplayer not just the index=0 (The damage causer is the Player Controlled character) 
 		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			return;
+		}
+		// We need to retrieve the target character (The damage causer is the enemy)
+		if (AAuraPlayerController* PC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
 		}
