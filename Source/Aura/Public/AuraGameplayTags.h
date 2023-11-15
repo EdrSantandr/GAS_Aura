@@ -63,6 +63,11 @@ public:
 	//For abilities
 	FGameplayTag Abilities_Attack;
 
+	//For sockets and montages
+	FGameplayTag Montage_Attack_Weapon;
+	FGameplayTag Montage_Attack_RightHand;
+	FGameplayTag Montage_Attack_LeftHand;
+
 	//Map to handle damagetype to resistances
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 

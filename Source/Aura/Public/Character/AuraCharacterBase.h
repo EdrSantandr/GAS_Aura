@@ -35,9 +35,16 @@ public:
 	virtual AActor* GetAvatar_Implementation() override;
 
 	virtual FVector GetCombatSocketLocation_Implementation() override;
-	/* Combat Interface*/
+
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	
+	/* end Combat Interface*/
 	UFUNCTION(NetMulticast, Reliable)
 	virtual void MulticastHandelDeath();
+
+	//to make the relation between the montage and the tag
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
 	
 protected:
 	virtual void BeginPlay() override;

@@ -70,6 +70,11 @@ FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation()
 	return Weapon->GetSocketLocation(WeaponTipSocketName);
 }
 
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
+}
+
 bool AAuraCharacterBase::IsDead_Implementation() const
 {
 	return bDead;
